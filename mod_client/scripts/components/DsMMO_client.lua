@@ -4,268 +4,48 @@ local DSMMO_ACTIONS = {
 	["CHOP"] = {1, 0.6, 0, 1},
 	["MINE"] = {1, 1, 0.0, 1},
 	["ATTACK"] = {0.7, 0, 0, 1},
-	["PLANT"] = {0, 0.5, 0, 1},
-	["BUILD"] = {0, 0, 1, 1},
 	["DIG"] = {0.5, 0.3, 0, 1},
-	["EAT"] = {0.5, 0, 0.7, 1},
 	["PICK"] = {0, 1, 1, 1}
 }
 local ORDER = {
 	"CHOP",
 	"MINE",
 	"ATTACK",
-	"PLANT",
-	"BUILD",
 	"DIG",
-	"EAT",
 	"PICK",
 }
 
 
 local LEVEL_MAX = 10
 
-local RECIPES = {
-	amulet = {
-		name="Ritual of death",
-		tree="EAT",
-		min_level=5,
-		chance=2
-	},
-	deerclops_eyeball = {
-		name="Ritual of a new life",
-		tree="EAT",
-		min_level=8,
-		chance=2
-	},
-	
-	molehill = {
-		name="Ritual of mole infestation",
-		tree="DIG",
-		min_level=2,
-		chance=1
-	},
-	shovel = {
-		name="Ritual of mole attraction",
-		tree="DIG",
-		min_level=3,
-		chance=1.5
-	},
-	pitchfork = {
-		name="Ritual of roman streets",
-		tree="DIG",
-		min_level=5,
-		chance=0.8
-	},
-	
-	coontail = {
-		name="Ritual of pussy love",
-		tree="BUILD",
-		min_level=1,
-		chance=0.5
-	},
-	cave_banana_cooked = {
-		name="Ritual of dumb monkeys",
-		tree="BUILD",
-		min_level=2,
-		chance=0.5
-	},
-	pond = {
-		name="Ritual of dry humping",
-		tree="BUILD",
-		min_level=3,
-		chance=0.5
-	},
-	fish = {
-		name="Ritual of splishy splashy",
-		tree="BUILD",
-		min_level=3,
-		chance=0.5
-	},
-	walrus_camp = {
-		name="Ritual of arctic fishing",
-		tree="BUILD",
-		min_level=4,
-		chance=0.5
-	},
-	walrus_tusk = {
-		name="Ritual of whalers feast",
-		tree="BUILD",
-		min_level=4,
-		chance=0.5
-	},
-	houndstooth = {
-		name="Ritual of puppy love",
-		tree="BUILD",
-		min_level=5,
-		chance=0.5
-	},
-	houndstooth = {
-		name="Ritual of puppy love",
-		tree="BUILD",
-		min_level=5,
-		chance=0.5
-	},
-	batwing = {
-		name="Ritual of... I am Batman!",
-		tree="BUILD",
-		min_level=6,
-		chance=0.5
-	},
-	pigskin = {
-		name="Ritual of Aquarius",
-		tree="BUILD",
-		min_level=6,
-		chance=0.5
-	},
-	armorsnurtleshell = {
-		name="Ritual of escargot",
-		tree="BUILD",
-		min_level=6,
-		chance=0.5
-	},
-	tallbirdegg = {
-		name="Ritual of Saurons bird",
-		tree="BUILD",
-		min_level=7,
-		chance=0.5
-	},
-	firepit = {
-		name="Ritual of the pigable flame",
-		tree="BUILD",
-		min_level=8,
-		chance=0.5
-	},
-	skeleton_player = {
-		name="Ritual of rerevival",
-		tree="BUILD",
-		min_level=9,
-		chance=0.8
-	},
-	campfire = {
-		name="Ritual of homing flame",
-		tree="BUILD",
-		min_level=10,
-		chance=1
-	},
-	
-	berries = {
-		name="Ritual of redness",
-		tree="PLANT",
-		min_level=3,
-		chance=1
-	},
-	berries_juicy = {
-		name="Ritual of red juiciness",
-		tree="PLANT",
-		min_level=4,
-		chance=1
-	},
-	cave_banana = {
-		name="Ritual of bananana",
-		tree="PLANT",
-		min_level=6,
-		chance=0.9
-	},
-	livinglog = {
-		name="Ritual of magic mushrooms",
-		tree="PLANT",
-		min_level=8,
-		chance=0.8
-	},
-	
-	twigs = {
-		name="Ritual of the longest Twig",
-		tree="PICK",
-		min_level=2,
-		chance=1
-	},
-	cutgrass = {
-		name="Ritual of reggae dreams",
-		tree="PICK",
-		min_level=3,
-		chance=0.9
-	},
-	lightbulb = {
-		name="Ritual of shiny balls",
-		tree="PICK",
-		min_level=5,
-		chance=0.8
-	},
-	cutreeds = {
-		name="Ritual of Poe",
-		tree="PICK",
-		min_level=7,
-		chance=0.7
-	}
-}
 local SKILLS = {
-	fireflies= {
-		name="Ghosty fireflies",
-		tree="PICK",
-		min_level=1,
-		description="As a ghost, haunting evil flowers has a chance of turning them into fireflies"
-	},
-	hungry_attack = {
-		name="Hungry fighter",
-		tree="EAT",
-		min_level=1,
-		description="When you are hungry, your attack damage is multiplied by your eat-level"
-	},
-	self_cannibalism = {
-		name="Self-cannibalism",
-		tree="EAT",
-		min_level=3,
-		description="Exchange DsMMO-experience to completely fill your health, hunger or sanity.\nUse this skill in this menu by clicking the button beside the experience-number"
-	},
 	attack = {
 		name="Explosive touch",
 		tree="ATTACK",
-		min_level=1,
+		min_level=3,
 		description="Every attack you deal, has a chance of doing extra damage (spear-damage)"
 	},
 	attacked = {
 		name="Beetaliation",
 		tree="ATTACK",
-		min_level=2,
+		min_level=5,
 		description="Every time you are attacked, there is a chance that you spawn a bee, which will attack the source that attacked you"
 	},
-	fertilize = {
-		name="Double the shit",
-		tree="PLANT",
-		min_level=1,
-		description="Fertilizing has a chance of being extra effective"
-	},
-	harvest = {
-		name="Plant another day",
-		tree="PLANT",
-		min_level=2,
-		description="Harvesting crops has a chance of getting double drops"
-	},
-	dig = {
-		name="Treasure hunter",
-		tree="DIG",
-		min_level=1,
-		description="Digging molehills has a chance of spawning additional items"
+	hungry_attack = {
+		name="Hungry fighter",
+		tree="ATTACK",
+		min_level=7,
+		description="When you are hungry, your attack damage is multiplied by your eat-level"
 	}
 }
 
-
-local DEPLOY_PLANT_ACTIONS = { --deploying these will give PLANT-exp. Everything else gives BUILD-exp
-	pinecone = true,
-	twiggy_nut = true,
-	acorn = true,
-	berrybush = true,
-	berrybush2 = true,
-	berrybush_juicy = true,
-	sapling = true,
-	grass = true
-}
-
-
+-- Show the required exp to lvl up
 local function get_max_exp(self, action, lvl)
 	--return lvl > 0 and DSMMO_ACTIONS[action] + math.ceil(DSMMO_ACTIONS[action] * math.pow(LEVEL_UP_RATE, lvl)) or DSMMO_ACTIONS[action]
 	return self.min_exp[action] + math.ceil(self.min_exp[action] * math.pow(self.storage.level_up_rate, lvl))
 end
+
+-- Show the current lvl
 local function get_level(self, action, xp)
 	if xp < self.min_exp[action] then
 		return 0
@@ -275,20 +55,13 @@ local function get_level(self, action, xp)
 				return lvl
 			end
 		end
-		return lvl
+		return 10 --maybe I'm worng, idk
 		--This would be way better for performance. But it leads to rounding errors:
 		--return math.floor(math.log((xp-DSMMO_ACTIONS[action]) / DSMMO_ACTIONS[action]) / math.log(LEVEL_UP_RATE)) +1
 	end
 end
 
-local function onRecipe(player)
-	local self = player._parent.components.DsMMO_client
-	
-	local k = self.storage.recipe:value()
-	if RECIPES[k] then
-		self:show_recipe(k)
-	end
-end
+-- Gaining exp?
 local function onExpCorrection(player, action)
 	local self = player._parent.components.DsMMO_client
 	local new_xp = self.storage.net_exp[action]:value()
@@ -312,12 +85,16 @@ local function onExpCorrection(player, action)
 		self.exp[action] = self.exp[action] -1
 	end
 end
+
+-- setup min exp
 local function onMinExp(player, action)
 	local self = player._parent.components.DsMMO_client
 	
 	self.min_exp = {}
 	for i,v in ipairs(self.storage.net_min_exp:value()) do
-		self.min_exp[ORDER[i]] = v
+		if i < 6 then
+			self.min_exp[ORDER[i]] = v
+		end
 	end
 	
 	self:init_communication()
@@ -329,43 +106,25 @@ local function onPerformaction(player, data)
 	--local action = self.bufferedaction
 	if action then
 		local actionId = action.action.id
-		
-		--if actionId == "EAT" then
-			--if player.replica.hunger:GetPercent() < 100 then
-				--self:get_experience("EAT")
-			--end
-		if actionId == "FERTILIZE" or actionId == "HARVEST" then
-			self:get_experience("PLANT")
-		elseif actionId == "REPAIR" or actionId == "HAMMER" then
-			self:get_experience("BUILD")
-		elseif actionId == "TERRAFORM" then
-			self:get_experience("DIG")
-		elseif action == "DEPLOY" then
-			self:get_experience(DEPLOY_PLANT_ACTIONS[action.invobject.prefab] and "PLANT" or "BUILD")
-		elseif DSMMO_ACTIONS[actionId] then
-			self:get_experience(actionId)
-		end
-		
+		self:get_experience(actionId)
 		--self.bufferedaction = nil --to make sure it only counts for this actionwa
 	end
 end
+
 local function onAttacked(player)
 	local self = player.components.DsMMO_client
 	self:get_experience("ATTACK")
 end
-
 
 local DsMMO_client = Class(function(self, player)
 	self.player = player
 	self.bufferedaction = nil
 	self.ui_elements = {}
 	self.colors = DSMMO_ACTIONS
-	self.recipes = RECIPES
 	self.skills = SKILLS
-	
+
 	self._recipe_display = nil
-	
-	
+
 	self:create_netListeners()
 	TheNet:SendModRPCToServer("DsMMO", 1)
 end)
@@ -373,6 +132,7 @@ end)
 function DsMMO_client:add_display(ui)
 	self.ui_elements = ui
 end
+
 function DsMMO_client:create_index(array_in, array_out)
 	for k,v in pairs(array_in) do
 		if not v._duplicate then
@@ -413,6 +173,7 @@ function DsMMO_client:create_netListeners()
 	end
 	player.player_classified:ListenForEvent("DsMMO.min_exp", onMinExp)
 end
+
 function DsMMO_client:init_communication()
 	if self.min_exp and self.storage.level_up_rate then --check if all data has arrived yet
 		print("[DsMMO client] Init Communication")
@@ -446,16 +207,14 @@ function DsMMO_client:init_communication()
 				player.player_classified:ListenForEvent("DsMMO.exp." ..k, function(player) onExpCorrection(player, k) end)
 			end
 		end
-		player.player_classified:ListenForEvent("DsMMO.recipe", onRecipe)
 		
 		TheNet:SendModRPCToServer("DsMMO", 2)
 		self:activate()
 	end
 end
+
 function DsMMO_client:activate()
 	print("[DsMMO - client] Creating index")
-	self.recipes_index = {}
-	self:create_index(RECIPES, self.recipes_index)
 	self.skills_index = {}
 	self:create_index(SKILLS, self.skills_index)
 	
@@ -490,6 +249,7 @@ function DsMMO_client:activate()
 	self.ui_elements.statusdisplays.moisturemeter:SetPosition(-40, -100, 0)
 end
 
+-- probably we can delete it
 function DsMMO_client:get_chance(base_r, lvl)
 	local chance = base_r * (lvl / LEVEL_MAX)
 	
@@ -530,20 +290,6 @@ function DsMMO_client:show_badge(action, noPulse, isNegative)
 		)
 	end
 end
-function DsMMO_client:show_recipe(recipe)
-	if recipe then
-		self._current_recipte = recipe
-	else
-		recipe = self._current_recipte
-	end
-	
-	if self._recipe_display and self._recipe_display.inst:IsValid() then
-		self._recipe_display:show_recipe(recipe)
-	else
-		--self._recipe_display = self.ui_elements.right_root:AddChild(Recipe_display(self, recipe))
-		self._recipe_display = self.ui_elements.statusdisplays:AddChild(Recipe_display(self, recipe))
-	end
-end
 
 function DsMMO_client:createIndicator(msg, color)
 	local player = self.player
@@ -555,12 +301,14 @@ function DsMMO_client:createIndicator(msg, color)
 	indicator.Transform:SetPosition(player.Transform:GetWorldPosition())
 
 	local label = indicator.entity:AddLabel()
-	label:SetFont(NUMBERFONT)
-	label:SetFontSize(label_font_size)
-	label:SetWorldOffset(0, 0, 0)
-	label:SetColour(unpack(color))
-	label:SetText(msg)
-	label:Enable(true)
+	if label ~= nil then
+		label:SetFont(NUMBERFONT)
+		label:SetFontSize(label_font_size)
+		label:SetWorldOffset(0, 0, 0)
+		label:SetColour(unpack(color))
+		label:SetText(msg)
+		label:Enable(true)
+	end
 
 	--indicator:MoveToFront()
 	--indicator.entity:MoveToFront()

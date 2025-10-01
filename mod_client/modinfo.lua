@@ -1,11 +1,11 @@
-name = "DsMMO - client"
-author = "Jodli Developement"
+name = "DsMMOReborn - client"
+author = "Exvalivar Dev"
 
-description = "This is graphical addition for DsMMO.\nIf you are playing on your own server or computer, you need the main DsMMO-mod:\nhttp://bit.ly/ds_dsmmo"
+description = "This is graphical addition for DsMMOReborn.\nIf you are playing on your own server or computer, you need the main DsMMOReborn-mod:\n[put server link here]"
 forumthread = ""
 server_filter_tags = {"Character", "Utility", "Tweak"}
 
-version = "1.0.5"
+version = "0.0.1"
 
 api_version = 10
 dont_starve_compatible = false
