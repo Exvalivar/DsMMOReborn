@@ -13,67 +13,41 @@ local Action_levels = Class(Widget, function(self, owner, tab)
     
 	self.root = self:AddChild(Widget("root"))
     self.root:SetPosition(335, 0)
-	
-    --self.root:SetVAnchor(ANCHOR_MIDDLE)
-    --self.root:SetHAnchor(ANCHOR_MIDDLE)
-    --self.root:SetPosition(0,0,0)
-    --self.root:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-	
-    --self.center_panel = self.root:AddChild(TEMPLATES.CenterPanel(.6, nil, nil, 130, nil, nil, nil, .51, nil))
-    --self.center_panel.bg:SetSize(130, 540)
-    
-    --self.center_panel:SetPosition(-70)
-    --frame_x_scale, frame_y_scale, skipPos, x_size, y_size, topCrownOffset, bottomCrownOffset, bg_x_scale, bg_y_scale, bg_x_pos, bg_y_pos
-    
-    
-    
 	self.frame = self.root:AddChild(TEMPLATES.CurlyWindow(130, 540, .6, .6, 39, -25))
     self.frame:SetPosition(0, 20)
+
 	self.frame_bg = self.frame:AddChild(Image("images/fepanel_fills.xml", "panel_fill_tall.tex"))
-	
     self.frame_bg:SetScale(.51, .74)
     self.frame_bg:SetPosition(5, 7)
-    
-	
+
 	self.nav_bar = self.root:AddChild(TEMPLATES.NavBarWithScreenTitle(nil, "tall"))
 	local nav_pos = self.nav_bar:GetPosition()
-	local nav_w, nav_h = self.nav_bar.bg:GetSize()
+	local nav_w = self.nav_bar.bg:GetSize()
     self.nav_bar:SetPosition(- nav_w, nav_pos.y)
-    
-	--local nav_scaleX, nav_scaleY = self.nav_bar.bg:GetScale()
-    --self.nav_bar.bg:SetScale(nav_scaleX, 10)
-	local nav_bg_w, nav_bg_h = self.nav_bar.bg:GetSize()
+
+	local nav_bg_w = self.nav_bar.bg:GetSize()
     self.nav_bar.bg:SetSize(nav_bg_w, 950)
     self.nav_bar.bg:SetPosition(0, -180)
-	
-	
+
 	self.buttons = {}
 	self.content = {}
-	
+
 	local xp = owner.exp
 	local max_exp = owner.storage.max_exp
 	local colors = owner.colors
-	local recipes_index = owner.recipes_index
 	local skills_index = owner.skills_index
-	local self_cannibalism = owner.skills.self_cannibalism
-	local self_cannibalism_enabled = owner.storage.level.EAT >= self_cannibalism.min_level
-	
-	
+
 	local vpos = 0
-	
-	
+
 	local img_index = {
 		CHOP = "axe",
 		MINE = "pickaxe",
 		ATTACK = "spear",
-		PLANT = "carrot",
-		BUILD = "hammer",
 		DIG = "shovel",
-		EAT = "meatballs",
 		PICK = "berries"
 	}
-	
+
 	for action,v in pairs(owner.storage.level) do
 		local nav_btn = TEMPLATES.NavBarButton(vpos, action, function() self:setTab(action) end)
 
@@ -104,71 +78,10 @@ local Action_levels = Class(Widget, function(self, owner, tab)
 		level:SetHAlign(ANCHOR_LEFT)
 		level:SetRegionSize(200, 80)
 		level:SetPosition(-50, -60)
-		
-		if self_cannibalism_enabled then
-			local self_cannibalism_btn = content:AddChild(ImageButton("images/inventoryimages.xml", "meatballs.tex"))
-			self_cannibalism_btn:SetPosition(-170, -70)
-			self_cannibalism_btn:SetScale(.5, .5)
-			self_cannibalism_btn:SetTooltip("Use your " ..self_cannibalism.name .."-skill.\n Some of your " ..action .."-exp will be used to fill your health / sanity / hunger.")
-			self_cannibalism_btn:SetOnClick(function()
-				if self_cannibalism_btn._opened then
-					self_cannibalism_btn._opened = false
-					self_cannibalism_btn.image:SetTexture("images/inventoryimages.xml", "meatballs.tex")
-					self_cannibalism_btn.image:SetRotation(0)
-					self_cannibalism_btn.atlas = "images/inventoryimages.xml"
-					self_cannibalism_btn.image_focus = "meatballs.tex"
-					self_cannibalism_btn.image_normal = "meatballs.tex"
-					
-					self_cannibalism_btn.sanity_btn:Kill()
-					self_cannibalism_btn.health_btn:Kill()
-					self_cannibalism_btn.hunger_btn:Kill()
-				else
-					self_cannibalism_btn._opened = true
-					
-					self_cannibalism_btn.image:SetTexture(HUD_ATLAS, "turnarrow_icon.tex")
-					self_cannibalism_btn.image:SetRotation(90)
-					self_cannibalism_btn.atlas = HUD_ATLAS
-					self_cannibalism_btn.image_focus = "turnarrow_icon.tex"
-					self_cannibalism_btn.image_normal = "turnarrow_icon.tex"
-					
-					
-					self_cannibalism_btn.sanity_btn = content:AddChild(ImageButton("images/inventoryimages.xml", "half_sanity.tex"))
-					self_cannibalism_btn.sanity_btn:SetPosition(-170, -35)
-					self_cannibalism_btn.sanity_btn:SetScale(.5, .5)
-					self_cannibalism_btn.sanity_btn:SetTooltip("Sacrifice " ..action .."-exp to gain sanity")
-					self_cannibalism_btn.sanity_btn:SetOnClick(function()
-						SendModRPCToServer(GetModRPC("DsMMO", "use_eat_skill"), action, "sanity")
-						self:close()
-					end)
-					
-					self_cannibalism_btn.health_btn = content:AddChild(ImageButton("images/inventoryimages.xml", "half_health.tex"))
-					self_cannibalism_btn.health_btn:SetPosition(-170, 0)
-					self_cannibalism_btn.health_btn:SetScale(.5, .5)
-					self_cannibalism_btn.health_btn:SetTooltip("Sacrifice " ..action .."-exp to gain health")
-					self_cannibalism_btn.health_btn:SetOnClick(function()
-						SendModRPCToServer(GetModRPC("DsMMO", "use_eat_skill"), action, "health")
-						self:close()
-					end)
-					
-					self_cannibalism_btn.hunger_btn = content:AddChild(ImageButton("images/inventoryimages.xml", "half_hunger.tex"))
-					self_cannibalism_btn.hunger_btn:SetPosition(-170, 35)
-					self_cannibalism_btn.hunger_btn:SetScale(.5, .5)
-					self_cannibalism_btn.hunger_btn:SetTooltip("Sacrifice " ..action .."-exp to gain hunger")
-					self_cannibalism_btn.hunger_btn:SetOnClick(function()
-						TheNet:SendModRPCToServer("DsMMO", 3, action, "hunger")
-						self:close()
-					end)
-				end
-			end)
-		end
 
 		local horizontal_line2 = content:AddChild(Image("images/ui.xml", "line_horizontal_6.tex"))
 		horizontal_line2:SetScale(1, .25)
 		horizontal_line2:SetPosition(7, -90)
-
-		--local level = content:AddChild(Text(BODYTEXTFONT, 30))
-		--level:SetString("Learned rituals")
-		--level:SetPosition(0, -110)
 
 		local header_rituals = Text(BODYTEXTFONT, 30)
 		header_rituals:SetString("Learned rituals:")
@@ -177,16 +90,11 @@ local Action_levels = Class(Widget, function(self, owner, tab)
 
 		local elements = {header_rituals}
 		local not_learned = {}
-		self:fill_list(recipes_index[action], elements, not_learned, v)
-
-		local header_skills = Text(BODYTEXTFONT, 30)
-		header_skills:SetString("Learned skills:")
-		table.insert(elements, header_skills)
 
 		self:fill_list(skills_index[action], elements, not_learned, v)
 		
-		if table.getn(not_learned) then
-			print("qwe" ..table.getn(not_learned))
+		if #not_learned then
+			print("qwe" ..#not_learned)
 			local header_not_learned = Text(BODYTEXTFONT, 30)
 			header_not_learned:SetString("Not learned yet:")
 			table.insert(elements, header_not_learned)
